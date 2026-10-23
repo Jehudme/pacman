@@ -7,10 +7,10 @@ use crossterm::style::Color::Reset;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct Cell {
-    symbol: char,
-    visible: bool,
-    background_color: Color,
-    foreground_color: Color,
+    pub symbol: char,
+    pub visible: bool,
+    pub background_color: Color,
+    pub foreground_color: Color,
 }
 
 impl Cell {
@@ -84,7 +84,7 @@ impl Canvas {
         out.flush()
     }
 
-    pub fn draw<T: Drawable>(&mut self, drawable: T) {
+    pub fn draw<T: DrawableBehavior>(&mut self, drawable: T) {
         drawable.draw(self);
     }
 
@@ -98,11 +98,11 @@ impl Canvas {
     }
 }
 
-pub(crate) trait Drawable {
+pub trait DrawableBehavior {
     fn draw(&self, canvas: &mut Canvas);
 }
 
-impl Drawable for Canvas {
+impl DrawableBehavior for Canvas {
     fn draw(&self, canvas: &mut Canvas) {
         for x in 0..self.width {
             for y in 0..self.height {
